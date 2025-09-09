@@ -2,12 +2,13 @@
 
 # lib/basket.rb
 require_relative 'offers/buy_one_get_second_one_half'
+require_relative 'delivery/delivery_threshold'
 class Basket
   attr_reader :catalogue, :delivery_rules, :offers, :items
 
   def initialize(catalogue:, delivery_rules:, offers: [])
     @catalogue = catalogue
-    @delivery_rules = delivery_rules.sort_by { |r| r[:min_subtotal_cents] }
+    @delivery_rules = delivery_rules
     @offers = offers
     @items = []
   end
@@ -27,8 +28,7 @@ class Basket
 
   def delivery_fee_cents
     st = subtotal_cents
-    chosen = delivery_rules.reverse.find { |r| st >= r[:min_subtotal_cents] } || delivery_rules.first
-    chosen[:fee_cents]
+    delivery_rules.fee_for(st)
   end
 
   def total_cents

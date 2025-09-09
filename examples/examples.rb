@@ -14,15 +14,16 @@ delivery_rules = [
   { min_subtotal_cents: 9000, fee_cents: 0 },
 ]
 
+delivery = DeliveryThreshold.new(delivery_rules)
 offers = [BuyOneGetSecondOneHalf.new('R01')]
 
-def run_and_print(codes, catalogue, delivery_rules, offers)
-  b = Basket.new(catalogue: catalogue, delivery_rules: delivery_rules, offers: offers)
+def run_and_print(codes, catalogue, delivery, offers)
+  b = Basket.new(catalogue: catalogue, delivery_rules: delivery, offers: offers)
   codes.each { |c| b.add(c) }
-  puts "#{codes.join(', ')} => Subtotal: #{b.subtotal}  Total: #{b.total}"
+  puts "#{codes.join(', ')} => Subtotal: #{b.subtotal} Delivery: #{b.delivery_fee_cents / 100.0}  Total: #{b.total}"
 end
 
-run_and_print(%w[B01 G01], catalogue, delivery_rules, offers)
-run_and_print(%w[R01 R01], catalogue, delivery_rules, offers)
-run_and_print(%w[R01 G01], catalogue, delivery_rules, offers)
-run_and_print(%w[B01 B01 R01 R01 R01], catalogue, delivery_rules, offers)
+run_and_print(%w[B01 G01], catalogue, delivery, offers)
+run_and_print(%w[R01 R01], catalogue, delivery, offers)
+run_and_print(%w[R01 G01], catalogue, delivery, offers)
+run_and_print(%w[B01 B01 R01 R01 R01], catalogue, delivery, offers)
