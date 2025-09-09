@@ -5,6 +5,6 @@ class DeliveryThreshold
 
   def fee_for(subtotal_cents)
     rule = @rules.reverse.find { |r| subtotal_cents >= r[:min_subtotal_cents] } || @rules.first
-    rule[:fee_cents]
+    Money.new(rule[:fee_cents])
   end
 end

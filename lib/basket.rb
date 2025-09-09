@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-
-# lib/basket.rb
+require_relative 'money'
 require_relative 'offers/buy_one_get_second_one_half'
 require_relative 'delivery/delivery_threshold'
 class Basket
@@ -28,7 +27,8 @@ class Basket
 
   def delivery_fee_cents
     st = subtotal_cents
-    delivery_rules.fee_for(st)
+    chosen = delivery_rules.fee_for(st)
+    chosen.cents
   end
 
   def total_cents
@@ -36,19 +36,11 @@ class Basket
   end
 
   def total
-    format_cents(total_cents)
+    Money.new(total_cents).to_s
   end
 
   def subtotal
-    format_cents(subtotal_cents)
-  end
-
-  private
-
-  def format_cents(cents)
-    dollars = cents / 100
-    remainder = cents.abs % 100
-    format("$%d.%02d", dollars, remainder)
+    Money.new(subtotal_cents)
   end
 end
 
